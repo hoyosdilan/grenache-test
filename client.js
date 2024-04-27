@@ -18,9 +18,10 @@ async function submitOrder(order) {
     { timeout: 1000 },
     (err, result) => {
       if (err) {
-        console.error('Error:', err.message);
+        console.error('SUBMIT_ORDER - Error:', err.message);
+        return;
       }
-      console.log('Result:', result);
+      console.log('SUBMIT_ORDER - Result:', result);
     }
   );
 }
@@ -32,9 +33,10 @@ async function getOrder(userId) {
     { timeout: 1000 },
     (err, result) => {
       if (err) {
-        console.error('Error:', err.message);
+        console.error('GET_ORDER - Error:', err.message);
+        return;
       }
-      console.log('Result:', result);
+      console.log('GET_ORDER - Result:', JSON.stringify(result));
     }
   );
 }
@@ -46,9 +48,10 @@ async function getAllOrders() {
     { timeout: 1000 },
     (err, result) => {
       if (err) {
-        console.error('Error:', err.message);
+        console.error('GET_ALL_ORDERS - Error:', err.message);
+        return;
       }
-      console.log('Result:', result);
+      console.log('GET_ALL_ORDERS - Result:', JSON.stringify(result));
     }
   );
 }
@@ -57,12 +60,25 @@ const orderUser1 = { userId: 1, type: 'sell', price: 100, quantity: 2 };
 const orderUser2 = { userId: 2, type: 'buy', price: 100, quantity: 2 };
 const orderUser3 = { userId: 3, type: 'buy', price: 100, quantity: 2 };
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 async function main() {
-  submitOrder(orderUser1);
-  getOrder(orderUser1.userId);
+  await submitOrder(orderUser1);
+  await getOrder(orderUser1.userId);
+  await getAllOrders();
 
-  getAllOrders();
+  await submitOrder(orderUser2);
+  await getOrder(orderUser2.userId);
 
+  await getAllOrders();
+
+  await submitOrder(orderUser3);
+  await getOrder(orderUser3.userId);
+
+  await submitOrder(orderUser1);
+  await getOrder(orderUser1.userId);
+
+  await getAllOrders();
 }
 
 main();
